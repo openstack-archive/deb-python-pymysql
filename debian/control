@@ -1,0 +1,39 @@
+Source: python-pymysql
+Section: python
+Priority: optional
+Maintainer: PKG OpenStack <openstack-devel@lists.alioth.debian.org>
+Uploaders: Thomas Goirand <zigo@debian.org>
+Build-Depends: debhelper (>= 9),
+               python-all (>= 2.6.6-3~),
+               python-setuptools,
+               python3-all,
+               python3-setuptools
+Build-Depends-Indep: python-unittest2
+Standards-Version: 3.9.6
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-pymysql.git
+Vcs-Git: git://anonscm.debian.org/openstack/python-pymysql.git
+Homepage: https://github.com/PyMySQL/PyMySQL/
+
+Package: python-pymysql
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: ${misc:Depends}, ${python:Depends}
+Suggests: python-pymysql-doc
+Description: Pure-Python MySQL driver - Python 2.x
+ This package contains a pure-Python MySQL client library. The goal of PyMySQL
+ is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
+ IronPython and Jython.
+ .
+ This package contains the Python 2.x module.
+
+Package: python3-pymysql
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: ${misc:Depends}, ${python3:Depends}
+Suggests: python-pymysql-doc
+Description: Pure-Python MySQL Driver - Python 3.x
+ This package contains a pure-Python MySQL client library. The goal of PyMySQL
+ is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
+ IronPython and Jython.
+ .
+ This package contains the Python 3.x module.
