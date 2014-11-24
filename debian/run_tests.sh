@@ -50,15 +50,21 @@ while ! /usr/bin/mysqladmin --socket=${MYTEMP_DIR}/mysql.sock ping ; do
 done
 
 # Create the db
-mysql --socket=${MYTEMP_DIR}/mysql.sock --execute="CREATE DATABASE webpy;"
+mysql --socket=${MYTEMP_DIR}/mysql.sock --execute="CREATE DATABASE test_pymysql;"
+mysql --socket=${MYTEMP_DIR}/mysql.sock --execute="CREATE DATABASE test_pymysql2;"
 
 #####################
 ### RUN THE TESTS ###
 #####################
 # Launch the tests
+echo "[
+{\"unix_socket\": \"${MYTEMP_DIR}/mysql.sock\", \"user\": \"root\", \"passwd\": \"\", \"db\": \"test_pymysql\", \"use_unicode\": true},
+{\"unix_socket\": \"${MYTEMP_DIR}/mysql.sock\", \"user\": \"root\", \"passwd\": \"\", \"db\": \"test_pymysql2\" }
+]" >pymysql/tests/databases.json
+
 PYTHONS=`pyversions -vr`
 PYTHON3S=`py3versions -vr`
-for pyvers in $(PYTHONS) $(PYTHON3S); do
+for pyvers in $PYTHONS $PYTHON3S; do
 	PYTHONPATH=. PYTHON=python$pyvers python$pyvers runtests.py
 done
 
