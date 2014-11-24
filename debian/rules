@@ -30,10 +30,6 @@ override_dh_clean:
 	dh_clean -O--buildsystem=python_distutils
 	rm -rf build
 
-override_dh_sphinxdoc:
-	sphinx-build -b html doc debian/python-pymysql-doc/usr/share/doc/python-pymysql-doc/html
-	dh_sphinxdoc -O--buildsystem=python_distutils
-
 # Commands not to run
 override_dh_installcatalogs:
 override_dh_installemacsen override_dh_installifupdown:
@@ -43,4 +39,3 @@ override_dh_installpam override_dh_installppp override_dh_installudev override_d
 override_dh_installxfonts override_dh_gconf override_dh_icons override_dh_perl override_dh_usrlocal:
 override_dh_installcron override_dh_installdebconf:
 override_dh_installlogrotate override_dh_installgsettings:
-
