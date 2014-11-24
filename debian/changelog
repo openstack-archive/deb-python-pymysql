@@ -1,5 +1,5 @@
 python-pymysql (0.6.2-1) unstable; urgency=medium
 
-  * Initial release. (Closes: #XXXXXX)
+  * Initial release. (Closes: #770889)
 
  -- Thomas Goirand <zigo@debian.org>  Mon, 27 Oct 2014 19:29:19 +0800
