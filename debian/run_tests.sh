@@ -68,6 +68,8 @@ for pyvers in $PYTHONS $PYTHON3S; do
 	PYTHONPATH=. PYTHON=python$pyvers python$pyvers runtests.py
 done
 
+rm pymysql/tests/databases.json
+
 ###############################################
 ### SHUTDOWN MYSQL AND CLEAN ITS TMP FOLDER ###
 ###############################################
