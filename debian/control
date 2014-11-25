@@ -8,7 +8,7 @@ Build-Depends: debhelper (>= 9),
                python-setuptools,
                python3-all,
                python3-setuptools
-Build-Depends-Indep: python-unittest2, mysql-server
+Build-Depends-Indep: python-six, python-unittest2, python3-six, mysql-server
 Standards-Version: 3.9.6
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-pymysql.git
 Vcs-Git: git://anonscm.debian.org/openstack/python-pymysql.git
