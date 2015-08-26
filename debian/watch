@@ -1,3 +1,2 @@
 version=3
-http://pypi.python.org/packages/source/P/PyMySQL PyMySQL-(.*).tar.gz
-
+https://github.com/PyMySQL/PyMySQL/tags .*/(\d[\d\.]+)\.tar\.gz
