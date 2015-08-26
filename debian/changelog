@@ -1,6 +1,7 @@
 python-pymysql (0.6.2-2) unstable; urgency=medium
 
   * Fixes FTBFS by adding Corey Bryant patch (Closes: #796010).
+  * Removed ancient six patch.
 
  -- Thomas Goirand <zigo@debian.org>  Wed, 26 Aug 2015 13:54:54 +0000
 

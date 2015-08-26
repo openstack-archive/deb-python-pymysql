@@ -1,0 +1,16 @@
+Description: Partial cherry-pick from upstream commit eb172754
+             to fix failing test, test_issue_36().
+Author: Corey Bryant <corey.bryant@canonical.com>
+Forwarded: not-needed
+
+--- a/pymysql/tests/test_issues.py
++++ b/pymysql/tests/test_issues.py
+@@ -197,7 +197,7 @@
+                 kill_id = id
+                 break
+         # now nuke the connection
+-        conn.kill(kill_id)
++        self.connections[1].kill(kill_id)
+         # make sure this connection has broken
+         try:
+             c.execute("show tables")

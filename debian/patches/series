@@ -1,1 +1,2 @@
-using-six-for-unicode-strings.patch
+test-datatypes.patch
+test-issue-36.patch
