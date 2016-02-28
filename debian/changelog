@@ -1,3 +1,9 @@
+python-pymysql (0.6.2-3) UNRELEASED; urgency=medium
+
+  * Fixed VCS URLs (https).
+
+ -- Ondřej Nový <novy@ondrej.org>  Sun, 28 Feb 2016 15:47:34 +0100
+
 python-pymysql (0.6.2-2) unstable; urgency=medium
 
   * Fixes FTBFS by adding Corey Bryant patch (Closes: #796010).
