@@ -1,8 +1,11 @@
 *.pyc
 *.pyo
 __pycache__
+.coverage
 /dist
 /PyMySQL.egg-info
 /.tox
 /build
 /pymysql/tests/databases.json
+
+/.idea

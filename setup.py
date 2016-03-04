@@ -8,38 +8,29 @@ if version_tuple[3] is not None:
 else:
     version = "%d.%d.%d" % version_tuple[:3]
 
-try:
-    with open('README.rst') as f:
-        readme = f.read()
-except IOError:
-    readme = ''
-
 setup(
     name="PyMySQL",
     version=version,
     url='https://github.com/PyMySQL/PyMySQL/',
-    download_url = 'https://github.com/PyMySQL/PyMySQL/tarball/pymysql-%s' % version,
     author='yutaka.matsubara',
     author_email='yutaka.matsubara@gmail.com',
-    maintainer='Marcel Rodrigues',
-    maintainer_email='marcelgmr@gmail.com',
-    description='Pure-Python MySQL Driver',
-    long_description=readme,
+    maintainer='INADA Naoki',
+    maintainer_email='songofacandy@gmail.com',
+    description='Pure Python MySQL Driver',
     license="MIT",
     packages=find_packages(),
     classifiers=[
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: IronPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Topic :: Database',
-    ]
+    ],
 )
