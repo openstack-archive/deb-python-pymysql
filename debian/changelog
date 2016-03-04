@@ -1,6 +1,17 @@
-python-pymysql (0.6.2-3) UNRELEASED; urgency=medium
+python-pymysql (0.7.2-1) UNRELEASED; urgency=medium
 
-  * Fixed VCS URLs (https).
+  * New upstream version (Closes: #799776)
+  * Fixed VCS URLs (https)
+  * Removed patch test-datatypes.patch and test-issue-36.patch
+    (Applied upstream)
+  * Added Build-Depends-Indep: python3-unittest2
+  * Added patch skip_not_working_tests.patch
+  * Standards-Version is 3.9.7 now (no change)
+  * Reordered d/copyright
+  * Added myself to d/copyright
+  * Added myself as uploader
+  * Added Debian tests
+  * Added Build-Depends: dh-python
 
  -- Ondřej Nový <novy@ondrej.org>  Sun, 28 Feb 2016 15:47:34 +0100
 

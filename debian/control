@@ -2,14 +2,21 @@ Source: python-pymysql
 Section: python
 Priority: optional
 Maintainer: PKG OpenStack <openstack-devel@lists.alioth.debian.org>
-Uploaders: Thomas Goirand <zigo@debian.org>
+Uploaders: Thomas Goirand <zigo@debian.org>,
+           Ondřej Nový <novy@ondrej.org>,
 Build-Depends: debhelper (>= 9),
+               dh-python,
                python-all (>= 2.6.6-3~),
                python-setuptools,
                python3-all,
-               python3-setuptools
-Build-Depends-Indep: python-six, python-unittest2, python3-six, mysql-server
-Standards-Version: 3.9.6
+               python3-setuptools,
+               openstack-pkg-tools,
+Build-Depends-Indep: python-six,
+                     python-unittest2,
+                     python3-six,
+                     python3-unittest2,
+                     mysql-server
+Standards-Version: 3.9.7
 Vcs-Browser: https://anonscm.debian.org/cgit/openstack/python-pymysql.git/
 Vcs-Git: https://anonscm.debian.org/git/openstack/python-pymysql.git
 Homepage: https://github.com/PyMySQL/PyMySQL/

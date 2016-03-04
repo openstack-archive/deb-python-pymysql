@@ -2,13 +2,14 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: PyMySQL
 Source: https://github.com/PyMySQL/PyMySQL/
 
-Files: debian/*
-Copyright: (c) 2014, Thomas Goirand <zigo@debian.org>
-License: Expat
-
 Files: *
 Copyright: (c) 2013, Marcel Rodrigues <marcelgmr@gmail.com>
            (c) 2010, 2013 PyMySQL contributors
+License: Expat
+
+Files: debian/*
+Copyright: (c) 2014, Thomas Goirand <zigo@debian.org>
+           (c) 2016, Ondřej Nový <novy@ondrej.org>
 License: Expat
 
 License: Expat
