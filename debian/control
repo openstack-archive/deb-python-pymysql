@@ -6,16 +6,16 @@ Uploaders: Thomas Goirand <zigo@debian.org>,
            Ondřej Nový <novy@ondrej.org>,
 Build-Depends: debhelper (>= 9),
                dh-python,
+               openstack-pkg-tools,
                python-all (>= 2.6.6-3~),
                python-setuptools,
                python3-all,
                python3-setuptools,
-               openstack-pkg-tools,
-Build-Depends-Indep: python-six,
+Build-Depends-Indep: mysql-server,
+                     python-six,
                      python-unittest2,
                      python3-six,
                      python3-unittest2,
-                     mysql-server
 Standards-Version: 3.9.7
 Vcs-Browser: https://anonscm.debian.org/cgit/openstack/python-pymysql.git/
 Vcs-Git: https://anonscm.debian.org/git/openstack/python-pymysql.git
@@ -23,9 +23,10 @@ Homepage: https://github.com/PyMySQL/PyMySQL/
 
 Package: python-pymysql
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: ${misc:Depends}, ${python:Depends}
-Suggests: python-pymysql-doc
+Pre-Depends: dpkg (>= 1.15.6~),
+Depends: ${misc:Depends},
+         ${python:Depends},
+Suggests: python-pymysql-doc,
 Description: Pure-Python MySQL driver - Python 2.x
  This package contains a pure-Python MySQL client library. The goal of PyMySQL
  is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
@@ -35,9 +36,10 @@ Description: Pure-Python MySQL driver - Python 2.x
 
 Package: python3-pymysql
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: ${misc:Depends}, ${python3:Depends}
-Suggests: python-pymysql-doc
+Pre-Depends: dpkg (>= 1.15.6~),
+Depends: ${misc:Depends},
+         ${python3:Depends},
+Suggests: python-pymysql-doc,
 Description: Pure-Python MySQL Driver - Python 3.x
  This package contains a pure-Python MySQL client library. The goal of PyMySQL
  is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
