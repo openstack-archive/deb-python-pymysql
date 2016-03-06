@@ -1,4 +1,4 @@
-python-pymysql (0.7.2-1) UNRELEASED; urgency=medium
+python-pymysql (0.7.2-1) unstable; urgency=medium
 
   * New upstream version (Closes: #799776)
   * Fixed VCS URLs (https)
@@ -13,7 +13,7 @@ python-pymysql (0.7.2-1) UNRELEASED; urgency=medium
   * Added Debian tests
   * Added Build-Depends: dh-python
 
- -- Ondřej Nový <novy@ondrej.org>  Sun, 28 Feb 2016 15:47:34 +0100
+ -- Ondřej Nový <novy@ondrej.org>  Sun, 06 Mar 2016 01:01:50 +0100
 
 python-pymysql (0.6.2-2) unstable; urgency=medium
 
