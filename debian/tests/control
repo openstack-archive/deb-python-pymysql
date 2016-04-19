@@ -1,5 +1,5 @@
 Depends: python-pymysql
-Test-Command: python -c "import pymysql ; print pymysql.VERSION"
+Test-Command: cd "$ADTTMP" ; python -c "import pymysql ; print pymysql.VERSION"
 
 Depends: python3-pymysql
-Test-Command: python3 -c "import pymysql ; print(pymysql.VERSION)"
+Test-Command: cd "$ADTTMP" ; python3 -c "import pymysql ; print(pymysql.VERSION)"
