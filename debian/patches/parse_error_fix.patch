@@ -1,0 +1,15 @@
+Description: Fix syntax error in test_cursor
+Origin: https://github.com/PyMySQL/PyMySQL/pull/464/commits/6f65029f5d88f987a798987d3ca30460154db0c9
+Last-Update: 2016-05-22
+
+--- a/pymysql/tests/test_cursor.py
++++ b/pymysql/tests/test_cursor.py
+@@ -107,7 +107,7 @@
+                 `B%` INTEGER)""")
+         try:
+             q = "INSERT INTO percent_test (`A%%`, `B%%`) VALUES (%s, %s)"
+-            self.assertIsNotNone(pymysql.cursors.RE_INSERT_VALUES.match(q)
++            self.assertIsNotNone(pymysql.cursors.RE_INSERT_VALUES.match(q))
+             cursor.executemany(q, [(3, 4), (5, 6)])
+             self.assertTrue(cursor._executed.endswith("(3, 4),(5, 6)"), "executemany with %% not in one query")
+         finally:
