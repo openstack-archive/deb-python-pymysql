@@ -12,8 +12,11 @@ from . import err
 #: Regular expression for :meth:`Cursor.executemany`.
 #: executemany only suports simple bulk insert.
 #: You can use it to load large dataset.
-RE_INSERT_VALUES = re.compile(r"""(INSERT\s.+\sVALUES\s+)(\(\s*(?:%s|%\(.+\)s)\s*(?:,\s*(?:%s|%\(.+\)s)\s*)*\))(\s*(?:ON DUPLICATE.*)?)\Z""",
-                              re.IGNORECASE | re.DOTALL)
+RE_INSERT_VALUES = re.compile(
+    r"\s*((?:INSERT|REPLACE)\s.+\sVALUES?\s+)" +
+    r"(\(\s*(?:%s|%\(.+\)s)\s*(?:,\s*(?:%s|%\(.+\)s)\s*)*\))" +
+    r"(\s*(?:ON DUPLICATE.*)?)\Z",
+    re.IGNORECASE | re.DOTALL)
 
 
 class Cursor(object):
@@ -160,17 +163,23 @@ class Cursor(object):
         return result
 
     def executemany(self, query, args):
+        # type: (str, list) -> int
         """Run several data against one query
 
-        PyMySQL can execute bulkinsert for query like 'INSERT ... VALUES (%s)'.
-        In other form of queries, just run :meth:`execute` many times.
+        :param query: query to execute on server
+        :param args:  Sequence of sequences or mappings.  It is used as parameter.
+        :return: Number of rows affected, if any.
+
+        This method improves performance on multiple-row INSERT and
+        REPLACE. Otherwise it is equivalent to looping over args with
+        execute().
         """
         if not args:
             return
 
         m = RE_INSERT_VALUES.match(query)
         if m:
-            q_prefix = m.group(1)
+            q_prefix = m.group(1) % ()
             q_values = m.group(2).rstrip()
             q_postfix = m.group(3) or ''
             assert q_values[0] == '(' and q_values[-1] == ')'

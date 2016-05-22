@@ -18,8 +18,7 @@ import warnings
 
 from .charset import MBLENGTH, charset_by_name, charset_by_id
 from .constants import CLIENT, COMMAND, FIELD_TYPE, SERVER_STATUS
-from .converters import (
-    escape_item, encoders, decoders, escape_string, through)
+from .converters import escape_item, escape_string, through, conversions as _conv
 from .cursors import Cursor
 from .optionfile import Parser
 from .util import byte2int, int2byte
@@ -527,15 +526,15 @@ class Connection(object):
     _auth_plugin_name = ''
 
     def __init__(self, host=None, user=None, password="",
-                 database=None, port=3306, unix_socket=None,
+                 database=None, port=0, unix_socket=None,
                  charset='', sql_mode=None,
-                 read_default_file=None, conv=decoders, use_unicode=None,
+                 read_default_file=None, conv=None, use_unicode=None,
                  client_flag=0, cursorclass=Cursor, init_command=None,
                  connect_timeout=None, ssl=None, read_default_group=None,
                  compress=None, named_pipe=None, no_delay=None,
                  autocommit=False, db=None, passwd=None, local_infile=False,
                  max_allowed_packet=16*1024*1024, defer_connect=False,
-                 auth_plugin_map={}):
+                 auth_plugin_map={}, read_timeout=None, write_timeout=None):
         """
         Establish a connection to the MySQL database. Accepts several
         arguments:
@@ -544,15 +543,16 @@ class Connection(object):
         user: Username to log in as
         password: Password to use.
         database: Database to use, None to not use a particular one.
-        port: MySQL port to use, default is usually OK.
+        port: MySQL port to use, default is usually OK. (default: 3306)
         unix_socket: Optionally, you can use a unix socket rather than TCP/IP.
         charset: Charset you want to use.
         sql_mode: Default SQL_MODE to use.
         read_default_file:
             Specifies  my.cnf file to read these parameters from under the [client] section.
         conv:
-            Decoders dictionary to use instead of the default one.
-            This is used to provide custom marshalling of types. See converters.
+            Conversion dictionary to use instead of the default one.
+            This is used to provide custom marshalling and unmarshaling of types.
+            See converters.
         use_unicode:
             Whether or not to default to unicode strings.
             This option defaults to true for Py3k.
@@ -635,11 +635,17 @@ class Connection(object):
             charset = _config("default-character-set", charset)
 
         self.host = host or "localhost"
-        self.port = port
+        self.port = port or 3306
         self.user = user or DEFAULT_USER
         self.password = password or ""
         self.db = database
         self.unix_socket = unix_socket
+        if read_timeout is not None and read_timeout <= 0:
+            raise ValueError("read_timeout should be >= 0")
+        self._read_timeout = read_timeout
+        if write_timeout is not None and write_timeout <= 0:
+            raise ValueError("write_timeout should be >= 0")
+        self._write_timeout = write_timeout
         if charset:
             self.charset = charset
             self.use_unicode = True
@@ -667,14 +673,17 @@ class Connection(object):
         #: specified autocommit mode. None means use server default.
         self.autocommit_mode = autocommit
 
-        self.encoders = encoders  # Need for MySQLdb compatibility.
-        self.decoders = conv
+        if conv is None:
+            conv = _conv
+        # Need for MySQLdb compatibility.
+        self.encoders = dict([(k, v) for (k, v) in conv.items() if type(k) is not int])
+        self.decoders = dict([(k, v) for (k, v) in conv.items() if type(k) is int])
         self.sql_mode = sql_mode
         self.init_command = init_command
         self.max_allowed_packet = max_allowed_packet
         self._auth_plugin_map = auth_plugin_map
         if defer_connect:
-            self.socket = None
+            self._sock = None
         else:
             self.connect()
 
@@ -697,7 +706,7 @@ class Connection(object):
 
     def close(self):
         """Send the quit message and close the socket"""
-        if self.socket is None:
+        if self._sock is None:
             raise err.Error("Already closed")
         send_data = struct.pack('<iB', 1, COMMAND.COM_QUIT)
         try:
@@ -705,22 +714,22 @@ class Connection(object):
         except Exception:
             pass
         finally:
-            sock = self.socket
-            self.socket = None
+            sock = self._sock
+            self._sock = None
             self._rfile = None
             sock.close()
 
     @property
     def open(self):
-        return self.socket is not None
+        return self._sock is not None
 
     def __del__(self):
-        if self.socket:
+        if self._sock:
             try:
-                self.socket.close()
+                self._sock.close()
             except:
                 pass
-        self.socket = None
+        self._sock = None
         self._rfile = None
 
     def autocommit(self, value):
@@ -770,19 +779,25 @@ class Connection(object):
         return result.rows
 
     def select_db(self, db):
-        '''Set current db'''
+        """Set current db"""
         self._execute_command(COMMAND.COM_INIT_DB, db)
         self._read_ok_packet()
 
     def escape(self, obj, mapping=None):
-        """Escape whatever value you pass to it"""
+        """Escape whatever value you pass to it.
+        
+        Non-standard, for internal use; do not use this in your applications.
+        """
         if isinstance(obj, str_type):
             return "'" + self.escape_string(obj) + "'"
         return escape_item(obj, self.charset, mapping=mapping)
 
     def literal(self, obj):
-        '''Alias for escape()'''
-        return self.escape(obj)
+        """Alias for escape()
+        
+        Non-standard, for internal use; do not use this in your applications.
+        """
+        return self.escape(obj, self.encoders)
 
     def escape_string(self, s):
         if (self.server_status &
@@ -834,7 +849,7 @@ class Connection(object):
 
     def ping(self, reconnect=True):
         """Check if the server is alive"""
-        if self.socket is None:
+        if self._sock is None:
             if reconnect:
                 self.connect()
                 reconnect = False
@@ -883,7 +898,7 @@ class Connection(object):
                     sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 sock.settimeout(None)
                 sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-            self.socket = sock
+            self._sock = sock
             self._rfile = _makefile(sock, 'rb')
             self._next_seq_id = 0
 
@@ -967,6 +982,7 @@ class Connection(object):
         return packet
 
     def _read_bytes(self, num_bytes):
+        self._sock.settimeout(self._read_timeout)
         while True:
             try:
                 data = self._rfile.read(num_bytes)
@@ -983,8 +999,9 @@ class Connection(object):
         return data
 
     def _write_bytes(self, data):
+        self._sock.settimeout(self._write_timeout)
         try:
-            self.socket.sendall(data)
+            self._sock.sendall(data)
         except IOError as e:
             raise err.OperationalError(2006, "MySQL server has gone away (%r)" % (e,))
 
@@ -1012,7 +1029,7 @@ class Connection(object):
             return 0
 
     def _execute_command(self, command, sql):
-        if not self.socket:
+        if not self._sock:
             raise err.InterfaceError("(0, '')")
 
         # If the last query was unbuffered, make sure it finishes before
@@ -1066,8 +1083,8 @@ class Connection(object):
         if self.ssl and self.server_capabilities & CLIENT.SSL:
             self.write_packet(data_init)
 
-            self.socket = self.ctx.wrap_socket(self.socket, server_hostname=self.host)
-            self._rfile = _makefile(self.socket, 'rb')
+            self._sock = self.ctx.wrap_socket(self._sock, server_hostname=self.host)
+            self._rfile = _makefile(self._sock, 'rb')
 
         data = data_init + self.user + b'\0'
 
@@ -1390,7 +1407,12 @@ class MySQLResult(object):
     def _read_row_from_packet(self, packet):
         row = []
         for encoding, converter in self.converters:
-            data = packet.read_length_coded_string()
+            try:
+                data = packet.read_length_coded_string()
+            except IndexError:
+                # No more columns in this row
+                # See https://github.com/PyMySQL/PyMySQL/pull/434
+                break
             if data is not None:
                 if encoding is not None:
                     data = data.decode(encoding)
@@ -1441,7 +1463,7 @@ class LoadLocalFile(object):
 
     def send_data(self):
         """Send data packets from the local file to the server"""
-        if not self.connection.socket:
+        if not self.connection._sock:
             raise err.InterfaceError("(0, '')")
         conn = self.connection
 
