@@ -1,4 +1,4 @@
-python-pymysql (0.7.3-1) UNRELEASED; urgency=medium
+python-pymysql (0.7.3-1) unstable; urgency=medium
 
   * New upstream release
   * Standards-Version is 3.9.8 now (no change)
@@ -6,7 +6,7 @@ python-pymysql (0.7.3-1) UNRELEASED; urgency=medium
   * d/rules: Changed UPSTREAM_GIT protocol to https
   * Added parse_error_fix.patch (Fix syntax error in test_cursor)
 
- -- Ondřej Nový <novy@ondrej.org>  Sat, 09 Apr 2016 19:30:55 +0200
+ -- Ondřej Nový <novy@ondrej.org>  Sun, 22 May 2016 19:14:58 +0200
 
 python-pymysql (0.7.2-1) unstable; urgency=medium
 
