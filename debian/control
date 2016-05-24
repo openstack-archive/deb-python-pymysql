@@ -26,7 +26,6 @@ Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~),
 Depends: ${misc:Depends},
          ${python:Depends},
-Suggests: python-pymysql-doc,
 Description: Pure-Python MySQL driver - Python 2.x
  This package contains a pure-Python MySQL client library. The goal of PyMySQL
  is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
@@ -39,7 +38,6 @@ Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~),
 Depends: ${misc:Depends},
          ${python3:Depends},
-Suggests: python-pymysql-doc,
 Description: Pure-Python MySQL Driver - Python 3.x
  This package contains a pure-Python MySQL client library. The goal of PyMySQL
  is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
