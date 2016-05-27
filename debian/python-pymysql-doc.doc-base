@@ -1,0 +1,9 @@
+Document: python-pymysql-doc
+Title: PyMySQL Documentation
+Author: OpenStack
+Abstract: Sphinx documentation for PyMySQL
+Section: Programming/Python
+
+Format: HTML
+Index: /usr/share/doc/python-pymysql-doc/html/index.html
+Files: /usr/share/doc/python-pymysql-doc/html/*

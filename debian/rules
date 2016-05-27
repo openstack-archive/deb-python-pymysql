@@ -7,7 +7,7 @@ UPSTREAM_GIT := https://github.com/PyMySQL/PyMySQL.git
 -include /usr/share/openstack-pkg-tools/pkgos.make
 
 %:
-	dh $@ --buildsystem=python_distutils --with python2,python3
+	dh $@ --buildsystem=python_distutils --with python2,python3,sphinxdoc
 
 override_dh_install:
 	set -e ; for pyvers in $(PYTHONS); do \
@@ -29,6 +29,12 @@ endif
 override_dh_clean:
 	dh_clean -O--buildsystem=python_distutils
 	rm -rf build
+
+override_dh_sphinxdoc:
+ifeq (,$(findstring nodocs, $(DEB_BUILD_OPTIONS)))
+	sphinx-build -b html docs/source $(CURDIR)/debian/python-pymysql-doc/usr/share/doc/python-pymysql-doc/html
+	dh_sphinxdoc -O--buildsystem=python_distutils
+endif
 
 # Commands not to run
 override_dh_installcatalogs:
