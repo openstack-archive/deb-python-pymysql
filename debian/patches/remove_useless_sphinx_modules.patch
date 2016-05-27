@@ -1,0 +1,17 @@
+Author: Ondřej Nový <novy@ondrej.org>
+Forwarded: https://github.com/PyMySQL/PyMySQL/pull/468
+Last-Update: 2016-05-27
+
+--- a/docs/source/conf.py
++++ b/docs/source/conf.py
+@@ -30,10 +30,6 @@
+ # ones.
+ extensions = [
+     'sphinx.ext.autodoc',
+-    'sphinx.ext.intersphinx',
+-    'sphinx.ext.mathjax',
+-    'sphinx.ext.ifconfig',
+-    'sphinx.ext.viewcode',
+ ]
+ 
+ # Add any paths that contain templates here, relative to this directory.
