@@ -24,7 +24,6 @@ Homepage: https://github.com/PyMySQL/PyMySQL/
 
 Package: python-pymysql
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~),
 Depends: ${misc:Depends},
          ${python:Depends},
 Suggests: python-pymysql-doc,
@@ -37,7 +36,6 @@ Description: Pure-Python MySQL driver - Python 2.x
 
 Package: python3-pymysql
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~),
 Depends: ${misc:Depends},
          ${python3:Depends},
 Suggests: python-pymysql-doc,
