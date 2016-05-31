@@ -1,4 +1,4 @@
-python-pymysql (0.7.4-1) UNRELEASED; urgency=medium
+python-pymysql (0.7.4-1) unstable; urgency=medium
 
   * New upstream release
   * Added package python-pymysql-doc with documentation
@@ -6,7 +6,7 @@ python-pymysql (0.7.4-1) UNRELEASED; urgency=medium
   * Removed Pre-Depends on dpkg
   * Removed parse_error_fix.patch (Applied upstream)
 
- -- Ondřej Nový <novy@ondrej.org>  Tue, 24 May 2016 13:55:19 +0200
+ -- Ondřej Nový <novy@ondrej.org>  Tue, 31 May 2016 22:04:03 +0200
 
 python-pymysql (0.7.3-1) unstable; urgency=medium
 
