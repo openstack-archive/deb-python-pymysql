@@ -1,3 +1,9 @@
+python-pymysql (0.7.4-2) UNRELEASED; urgency=medium
+
+  * Removed version from python-all build dependency
+
+ -- Ondřej Nový <novy@ondrej.org>  Fri, 17 Jun 2016 20:43:14 +0200
+
 python-pymysql (0.7.4-1) unstable; urgency=medium
 
   * New upstream release
