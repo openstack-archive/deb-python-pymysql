@@ -1,2 +1,2 @@
 skip_not_working_tests.patch
-remove_useless_sphinx_modules.patch
+remove_intersphinx.patch
