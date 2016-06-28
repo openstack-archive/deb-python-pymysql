@@ -35,7 +35,8 @@ try:
     import getpass
     DEFAULT_USER = getpass.getuser()
     del getpass
-except ImportError:
+except (ImportError, KeyError):
+    # KeyError occurs when there's no entry in OS database for a current user.
     DEFAULT_USER = None
 
 
@@ -87,6 +88,7 @@ TEXT_TYPES = set([
     FIELD_TYPE.BLOB,
     FIELD_TYPE.LONG_BLOB,
     FIELD_TYPE.MEDIUM_BLOB,
+    FIELD_TYPE.JSON,
     FIELD_TYPE.STRING,
     FIELD_TYPE.TINY_BLOB,
     FIELD_TYPE.VAR_STRING,
@@ -1316,6 +1318,10 @@ class MySQLResult(object):
 
         if first_packet.is_ok_packet():
             self._read_ok_packet(first_packet)
+            self.unbuffered_active = False
+            self.connection = None
+        elif first_packet.is_load_local_packet():
+            self._read_load_local_packet(first_packet)
             self.unbuffered_active = False
             self.connection = None
         else:
