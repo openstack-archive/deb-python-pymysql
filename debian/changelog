@@ -1,4 +1,4 @@
-python-pymysql (0.7.5-1) UNRELEASED; urgency=medium
+python-pymysql (0.7.5-1) unstable; urgency=medium
 
   * New upstream release
   * Removed version from python-all build dependency
@@ -6,7 +6,7 @@ python-pymysql (0.7.5-1) UNRELEASED; urgency=medium
   * Removed remove_useless_sphinx_modules.patch (Applied upstream)
   * Added remove_intersphinx.patch
 
- -- Ondřej Nový <novy@ondrej.org>  Fri, 17 Jun 2016 20:43:14 +0200
+ -- Ondřej Nový <onovy@debian.org>  Wed, 29 Jun 2016 23:04:53 +0200
 
 python-pymysql (0.7.4-1) unstable; urgency=medium
 
