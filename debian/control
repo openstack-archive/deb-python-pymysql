@@ -2,23 +2,31 @@ Source: python-pymysql
 Section: python
 Priority: optional
 Maintainer: PKG OpenStack <openstack-devel@lists.alioth.debian.org>
-Uploaders: Thomas Goirand <zigo@debian.org>
+Uploaders: Thomas Goirand <zigo@debian.org>,
+           Ondřej Nový <onovy@debian.org>,
 Build-Depends: debhelper (>= 9),
-               python-all (>= 2.6.6-3~),
+               dh-python,
+               openstack-pkg-tools,
+               python-all,
                python-setuptools,
+               python-sphinx,
                python3-all,
-               python3-setuptools
-Build-Depends-Indep: python-six, python-unittest2, python3-six, mysql-server
-Standards-Version: 3.9.6
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/python-pymysql.git
-Vcs-Git: git://anonscm.debian.org/openstack/python-pymysql.git
+               python3-setuptools,
+Build-Depends-Indep: mysql-server,
+                     python-six,
+                     python-unittest2,
+                     python3-six,
+                     python3-unittest2,
+Standards-Version: 3.9.8
+Vcs-Browser: https://anonscm.debian.org/cgit/openstack/python-pymysql.git/
+Vcs-Git: https://anonscm.debian.org/git/openstack/python-pymysql.git
 Homepage: https://github.com/PyMySQL/PyMySQL/
 
 Package: python-pymysql
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: ${misc:Depends}, ${python:Depends}
-Suggests: python-pymysql-doc
+Depends: ${misc:Depends},
+         ${python:Depends},
+Suggests: python-pymysql-doc,
 Description: Pure-Python MySQL driver - Python 2.x
  This package contains a pure-Python MySQL client library. The goal of PyMySQL
  is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
@@ -28,12 +36,24 @@ Description: Pure-Python MySQL driver - Python 2.x
 
 Package: python3-pymysql
 Architecture: all
-Pre-Depends: dpkg (>= 1.15.6~)
-Depends: ${misc:Depends}, ${python3:Depends}
-Suggests: python-pymysql-doc
+Depends: ${misc:Depends},
+         ${python3:Depends},
+Suggests: python-pymysql-doc,
 Description: Pure-Python MySQL Driver - Python 3.x
  This package contains a pure-Python MySQL client library. The goal of PyMySQL
  is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
  IronPython and Jython.
  .
  This package contains the Python 3.x module.
+
+Package: python-pymysql-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends},
+         ${sphinxdoc:Depends},
+Description: Pure-Python MySQL driver - doc
+ This package contains a pure-Python MySQL client library. The goal of PyMySQL
+ is to be a drop-in replacement for MySQLdb and work on CPython, PyPy,
+ IronPython and Jython.
+ .
+ This package contains the documentation.

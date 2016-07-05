@@ -1,1 +1,2 @@
-using-six-for-unicode-strings.patch
+skip_not_working_tests.patch
+remove_intersphinx.patch

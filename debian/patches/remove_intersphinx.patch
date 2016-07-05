@@ -1,0 +1,14 @@
+Author: Ondřej Nový <novy@ondrej.org>
+Forwarded: not-needed
+Last-Update: 2016-06-29
+
+--- a/docs/source/conf.py
++++ b/docs/source/conf.py
+@@ -30,7 +30,6 @@
+ # ones.
+ extensions = [
+     'sphinx.ext.autodoc',
+-    'sphinx.ext.intersphinx',
+ ]
+ 
+ # Add any paths that contain templates here, relative to this directory.
