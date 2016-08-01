@@ -2,6 +2,7 @@ python-pymysql (0.7.6-1) UNRELEASED; urgency=medium
 
   * New upstream release
   * Rebased d/p/skip_not_working_tests.patch
+  * Use pkgos-dh_auto_install and require newer openstack-pkg-tools
 
  -- Ondřej Nový <onovy@debian.org>  Mon, 01 Aug 2016 10:36:38 +0200
 
