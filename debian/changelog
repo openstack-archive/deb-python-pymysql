@@ -1,3 +1,9 @@
+python-pymysql (0.7.6-1~bpo8+1) jessie-backports; urgency=medium
+
+  * Rebuild for jessie-backports.
+
+ -- Ondřej Nový <onovy@debian.org>  Wed, 10 Aug 2016 12:30:29 +0200
+
 python-pymysql (0.7.6-1) unstable; urgency=medium
 
   * New upstream release
