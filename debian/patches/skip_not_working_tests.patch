@@ -4,7 +4,7 @@ Last-Update: 2016-03-04
 Forwarded: not-needed
 --- a/pymysql/tests/test_issues.py
 +++ b/pymysql/tests/test_issues.py
-@@ -378,6 +378,7 @@
+@@ -380,6 +380,7 @@
                      warnings.filterwarnings("ignore")
                      cur.execute('drop table if exists test_field_count')
  
