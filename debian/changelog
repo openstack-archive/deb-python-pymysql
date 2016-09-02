@@ -1,9 +1,9 @@
-python-pymysql (0.7.7-1) UNRELEASED; urgency=medium
+python-pymysql (0.7.7-1) unstable; urgency=medium
 
   * New upstream release
   * Removed python-six{3,} build depends - it's not used.
 
- -- Ondřej Nový <onovy@debian.org>  Wed, 10 Aug 2016 12:42:51 +0200
+ -- Ondřej Nový <onovy@debian.org>  Fri, 02 Sep 2016 11:40:40 +0200
 
 python-pymysql (0.7.6-1) unstable; urgency=medium
 
