@@ -1,3 +1,9 @@
+python-pymysql (0.7.9-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Ondřej Nový <onovy@debian.org>  Thu, 08 Sep 2016 19:51:13 +0200
+
 python-pymysql (0.7.7-1) unstable; urgency=medium
 
   * New upstream release
