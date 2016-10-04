@@ -1,4 +1,4 @@
-python-pymysql (0.7.6-2) UNRELEASED; urgency=medium
+python-pymysql (0.7.6-2) unstable; urgency=medium
 
   * Removed python-six{3,} build depends - it's not used.
   * d/s/options: extend-diff-ignore of .gitreview
