@@ -1,18 +1,22 @@
-python-pymysql (0.7.6-3) unstable; urgency=medium
+python-pymysql (0.7.9-2) unstable; urgency=medium
 
   * Using correct options for mysql_install_db (Closes: #841593).
   * Build-depends on default-mysql-server.
 
  -- Thomas Goirand <zigo@debian.org>  Mon, 31 Oct 2016 09:22:37 +0100
 
-python-pymysql (0.7.6-2) unstable; urgency=medium
+python-pymysql (0.7.9-1) unstable; urgency=medium
 
+  * New upstream release
+
+ -- Ondřej Nový <onovy@debian.org>  Thu, 08 Sep 2016 19:53:35 +0200
+
+python-pymysql (0.7.7-1) unstable; urgency=medium
+
+  * New upstream release
   * Removed python-six{3,} build depends - it's not used.
-  * d/s/options: extend-diff-ignore of .gitreview
-  * d/control: Using OpenStack's Gerrit as VCS URLs.
 
- -- Ondřej Nový <onovy@debian.org>  Wed, 10 Aug 2016 12:42:51 +0200
-
+ -- Ondřej Nový <onovy@debian.org>  Fri, 02 Sep 2016 11:40:40 +0200
 python-pymysql (0.7.6-1) unstable; urgency=medium
 
   * New upstream release
