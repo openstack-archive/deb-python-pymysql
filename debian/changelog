@@ -1,3 +1,10 @@
+python-pymysql (0.7.6-3) unstable; urgency=medium
+
+  * Using correct options for mysql_install_db (Closes: #841593).
+  * Build-depends on default-mysql-server.
+
+ -- Thomas Goirand <zigo@debian.org>  Mon, 31 Oct 2016 09:22:37 +0100
+
 python-pymysql (0.7.6-2) unstable; urgency=medium
 
   * Removed python-six{3,} build depends - it's not used.
