@@ -43,7 +43,7 @@ fi
 
 # --force is needed because buildd's can't resolve their own hostnames to ips
 mysql_install_db --no-defaults --datadir=${MYTEMP_DIR} ${MYSQL_INSTALL_DB_OPT} --user=${ME}
-/usr/sbin/mysqld --no-defaults --skip-grant --user=${ME} --socket=${MYTEMP_DIR}/mysql.sock --datadir=${MYTEMP_DIR} --skip-networking &
+/usr/sbin/mysqld --no-defaults --skip-grant-tables --user=${ME} --socket=${MYTEMP_DIR}/mysql.sock --datadir=${MYTEMP_DIR} --skip-networking &
 
 # This sets the path of the MySQL socket for any libmysql-client users, which includes
 # the ./tests/test_dbi client
