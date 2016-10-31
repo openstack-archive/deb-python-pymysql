@@ -30,8 +30,19 @@ set -x
 MYTEMP_DIR=`mktemp -d`
 ME=`whoami`
 
+MYSQL_VERSION=`/usr/sbin/mysqld --version 2>/dev/null | grep Ver | awk '{print $3}' | cut -d- -f1`
+MYSQL_VERSION_MAJ=`echo $MYSQL_VERSION | cut -d. -f1`
+MYSQL_VERSION_MID=`echo $MYSQL_VERSION) | cut -d. -f2`
+MYSQL_VERSION_MIN=`echo $MYSQL_VERSION) | cut -d. -f3`
+
+if [ "${MYSQL_VERSION_MAJ}" -le 5 ] && [ "${MYSQL_VERSION_MID}" -lt 7 ] ; then
+	MYSQL_INSTALL_DB_OPT="--force --skip-name-resolve" 
+else
+	MYSQL_INSTALL_DB_OPT="--basedir=/usr"
+fi
+
 # --force is needed because buildd's can't resolve their own hostnames to ips
-mysql_install_db --no-defaults --datadir=${MYTEMP_DIR} --force --skip-name-resolve --user=${ME}
+mysql_install_db --no-defaults --datadir=${MYTEMP_DIR} ${MYSQL_INSTALL_DB_OPT} --user=${ME}
 /usr/sbin/mysqld --no-defaults --skip-grant --user=${ME} --socket=${MYTEMP_DIR}/mysql.sock --datadir=${MYTEMP_DIR} --skip-networking &
 
 # This sets the path of the MySQL socket for any libmysql-client users, which includes
