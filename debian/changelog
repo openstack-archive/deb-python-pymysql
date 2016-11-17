@@ -1,3 +1,9 @@
+python-pymysql (0.7.9-3) UNRELEASED; urgency=medium
+
+  * Bumped debhelper version to 10
+
+ -- Ondřej Nový <onovy@debian.org>  Thu, 17 Nov 2016 16:41:41 +0100
+
 python-pymysql (0.7.9-2) unstable; urgency=medium
 
   * Using correct options for mysql_install_db (Closes: #841593).
