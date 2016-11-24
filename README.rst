@@ -1,3 +1,12 @@
+========================
+Team and repository tags
+========================
+
+.. image:: http://governance.openstack.org/badges/deb-python-pymysql.svg
+    :target: http://governance.openstack.org/reference/tags/index.html
+
+.. Change things from this point on
+
 .. image:: https://readthedocs.org/projects/pymysql/badge/?version=latest
     :target: http://pymysql.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
