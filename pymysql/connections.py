@@ -17,7 +17,7 @@ import traceback
 import warnings
 
 from .charset import MBLENGTH, charset_by_name, charset_by_id
-from .constants import CLIENT, COMMAND, FIELD_TYPE, SERVER_STATUS
+from .constants import CLIENT, COMMAND, CR, FIELD_TYPE, SERVER_STATUS
 from .converters import escape_item, escape_string, through, conversions as _conv
 from .cursors import Cursor
 from .optionfile import Parser
@@ -524,17 +524,19 @@ class Connection(object):
 
     _sock = None
     _auth_plugin_name = ''
+    _closed = False
 
     def __init__(self, host=None, user=None, password="",
                  database=None, port=0, unix_socket=None,
                  charset='', sql_mode=None,
                  read_default_file=None, conv=None, use_unicode=None,
                  client_flag=0, cursorclass=Cursor, init_command=None,
-                 connect_timeout=None, ssl=None, read_default_group=None,
+                 connect_timeout=10, ssl=None, read_default_group=None,
                  compress=None, named_pipe=None, no_delay=None,
                  autocommit=False, db=None, passwd=None, local_infile=False,
                  max_allowed_packet=16*1024*1024, defer_connect=False,
-                 auth_plugin_map={}, read_timeout=None, write_timeout=None):
+                 auth_plugin_map={}, read_timeout=None, write_timeout=None,
+                 bind_address=None):
         """
         Establish a connection to the MySQL database. Accepts several
         arguments:
@@ -544,6 +546,9 @@ class Connection(object):
         password: Password to use.
         database: Database to use, None to not use a particular one.
         port: MySQL port to use, default is usually OK. (default: 3306)
+        bind_address: When the client has multiple network interfaces, specify
+            the interface from which to connect to the host. Argument can be
+            a hostname or an IP address.
         unix_socket: Optionally, you can use a unix socket rather than TCP/IP.
         charset: Charset you want to use.
         sql_mode: Default SQL_MODE to use.
@@ -560,6 +565,7 @@ class Connection(object):
         cursorclass: Custom cursor class to use.
         init_command: Initial SQL statement to run when connection is established.
         connect_timeout: Timeout before throwing an exception when connecting.
+            (default: 10, min: 1, max: 31536000)
         ssl:
             A dict of arguments similar to mysql_ssl_set()'s parameters.
             For now the capath and cipher arguments are not supported.
@@ -594,7 +600,8 @@ class Connection(object):
         if compress or named_pipe:
             raise NotImplementedError("compress and named_pipe arguments are not supported")
 
-        if local_infile:
+        self._local_infile = bool(local_infile)
+        if self._local_infile:
             client_flag |= CLIENT.LOCAL_FILES
 
         self.ssl = False
@@ -632,6 +639,7 @@ class Connection(object):
             database = _config("database", database)
             unix_socket = _config("socket", unix_socket)
             port = int(_config("port", port))
+            bind_address = _config("bind-address", bind_address)
             charset = _config("default-character-set", charset)
 
         self.host = host or "localhost"
@@ -640,6 +648,10 @@ class Connection(object):
         self.password = password or ""
         self.db = database
         self.unix_socket = unix_socket
+        self.bind_address = bind_address
+        if not (0 < connect_timeout <= 31536000):
+            raise ValueError("connect_timeout should be >0 and <=31536000")
+        self.connect_timeout = connect_timeout or None
         if read_timeout is not None and read_timeout <= 0:
             raise ValueError("read_timeout should be >= 0")
         self._read_timeout = read_timeout
@@ -664,7 +676,6 @@ class Connection(object):
         self.client_flag = client_flag
 
         self.cursorclass = cursorclass
-        self.connect_timeout = connect_timeout
 
         self._result = None
         self._affected_rows = 0
@@ -706,8 +717,11 @@ class Connection(object):
 
     def close(self):
         """Send the quit message and close the socket"""
-        if self._sock is None:
+        if self._closed:
             raise err.Error("Already closed")
+        self._closed = True
+        if self._sock is None:
+            return
         send_data = struct.pack('<iB', 1, COMMAND.COM_QUIT)
         try:
             self._write_bytes(send_data)
@@ -723,7 +737,8 @@ class Connection(object):
     def open(self):
         return self._sock is not None
 
-    def __del__(self):
+    def _force_close(self):
+        """Close connection without QUIT message"""
         if self._sock:
             try:
                 self._sock.close()
@@ -731,6 +746,8 @@ class Connection(object):
                 pass
         self._sock = None
         self._rfile = None
+
+    __del__ = _force_close
 
     def autocommit(self, value):
         self.autocommit_mode = bool(value)
@@ -875,6 +892,7 @@ class Connection(object):
         self.encoding = encoding
 
     def connect(self, sock=None):
+        self._closed = False
         try:
             if sock is None:
                 if self.unix_socket and self.host in ('localhost', '127.0.0.1'):
@@ -884,10 +902,14 @@ class Connection(object):
                     self.host_info = "Localhost via UNIX socket"
                     if DEBUG: print('connected using unix_socket')
                 else:
+                    kwargs = {}
+                    if self.bind_address is not None:
+                        kwargs['source_address'] = (self.bind_address, 0)
                     while True:
                         try:
                             sock = socket.create_connection(
-                                (self.host, self.port), self.connect_timeout)
+                                (self.host, self.port), self.connect_timeout,
+                                **kwargs)
                             break
                         except (OSError, IOError) as e:
                             if e.errno == errno.EINTR:
@@ -964,8 +986,15 @@ class Connection(object):
             btrl, btrh, packet_number = struct.unpack('<HBB', packet_header)
             bytes_to_read = btrl + (btrh << 16)
             if packet_number != self._next_seq_id:
-                raise err.InternalError("Packet sequence number wrong - got %d expected %d" %
-                    (packet_number, self._next_seq_id))
+                self._force_close()
+                if packet_number == 0:
+                    # MariaDB sends error packet with seqno==0 when shutdown
+                    raise err.OperationalError(
+                        CR.CR_SERVER_LOST,
+                        "Lost connection to MySQL server during query")
+                raise err.InternalError(
+                    "Packet sequence number wrong - got %d expected %d"
+                    % (packet_number, self._next_seq_id))
             self._next_seq_id = (self._next_seq_id + 1) % 256
 
             recv_data = self._read_bytes(bytes_to_read)
@@ -990,12 +1019,14 @@ class Connection(object):
             except (IOError, OSError) as e:
                 if e.errno == errno.EINTR:
                     continue
+                self._force_close()
                 raise err.OperationalError(
-                    2013,
+                    CR.CR_SERVER_LOST,
                     "Lost connection to MySQL server during query (%s)" % (e,))
         if len(data) < num_bytes:
+            self._force_close()
             raise err.OperationalError(
-                2013, "Lost connection to MySQL server during query")
+                CR.CR_SERVER_LOST, "Lost connection to MySQL server during query")
         return data
 
     def _write_bytes(self, data):
@@ -1003,7 +1034,10 @@ class Connection(object):
         try:
             self._sock.sendall(data)
         except IOError as e:
-            raise err.OperationalError(2006, "MySQL server has gone away (%r)" % (e,))
+            self._force_close()
+            raise err.OperationalError(
+                CR.CR_SERVER_GONE_ERROR,
+                "MySQL server has gone away (%r)" % (e,))
 
     def _read_query_result(self, unbuffered=False):
         if unbuffered:
@@ -1341,6 +1375,9 @@ class MySQLResult(object):
         self.has_next = ok_packet.has_next
 
     def _read_load_local_packet(self, first_packet):
+        if not self.connection._local_infile:
+            raise RuntimeError(
+                "**WARN**: Received LOAD_LOCAL packet but local_infile option is false.")
         load_packet = LoadLocalPacketWrapper(first_packet)
         sender = LoadLocalFile(load_packet.filename, self.connection)
         try:
